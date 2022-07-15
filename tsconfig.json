@@ -15,6 +15,7 @@
 		"skipLibCheck": true,
 	},
 	"include": [
+		"source/global.d.ts",
 		"source",
 		"webpack.config.js"
 	]

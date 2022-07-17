@@ -5,7 +5,7 @@ import { initialState } from './initialState';
 
 
 export const {
-  useStore, useStoreSelector, useMutationSelector, useStoreState, useMutations,
+  useStore, useStoreSelector, useMutationSelector, useStoreState, useMutations, useStoreStateSelector,
 } =
   create<State, Mutations>({
     initialState,

@@ -10,13 +10,13 @@ import { BoxHeader } from './BoxHeader';
 import { SelectedWord } from './SelectedWord';
 import { BoxContent } from './BoxContent';
 import { gaps } from '../settings/box';
-import { Drag } from './icons/Drag';
 import { stylisAddImportant } from '../util/stylisAddImportant';
-import { useBoxAutoCoords } from '../store/derivations/useBoxAutoCoords';
+import { useBoxCoords } from '../store/derivations/useBoxCoords';
 import { useOnPageEffects } from '../store/mutations/onPage';
 import { ButtonBar } from './ButtonBar';
 import { Button } from './Button';
 import { font } from '../settings/font';
+import { DragButton } from './DragButton';
 
 
 type ContentStyledProps = {
@@ -52,7 +52,7 @@ export const OnPageBox = () => {
     onTranslationChange,
     onCloseClick,
   } = useMutations();
-  const boxCoords = useBoxAutoCoords();
+  const boxCoords = useBoxCoords();
   useOnPageEffects();
 
   if (!openBox) return null;
@@ -63,7 +63,7 @@ export const OnPageBox = () => {
         // ref={ref}
       >
         <BoxHeader>
-          <Drag />
+          <DragButton />
           <SelectedWord>{openBox.point.word}</SelectedWord>
         </BoxHeader>
         <BoxContent>

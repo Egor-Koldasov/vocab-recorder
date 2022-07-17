@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import styled from 'styled-components';
 
 
 export const DragStyled = styled.svg`
   
 `;
-export const Drag = () => {
+export const Drag = (props: ComponentProps<typeof DragStyled>) => {
   return (
-    <DragStyled width="15px" height="15px" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <DragStyled
+      width="15px" height="15px" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <path d="M3 5.5C3 5.77614 2.77614 6 2.5 6C2.22386 6 2 5.77614 2 5.5C2 5.22386 2.22386 5 2.5 5C2.77614 5 3 5.22386 3 5.5Z" stroke="black" />
       <path d="M8 5.5C8 5.77614 7.77614 6 7.5 6C7.22386 6 7 5.77614 7 5.5C7 5.22386 7.22386 5 7.5 5C7.77614 5 8 5.22386 8 5.5Z" stroke="black" />
       <path d="M13 5.5C13 5.77614 12.7761 6 12.5 6C12.2239 6 12 5.77614 12 5.5C12 5.22386 12.2239 5 12.5 5C12.7761 5 13 5.22386 13 5.5Z" stroke="black" />

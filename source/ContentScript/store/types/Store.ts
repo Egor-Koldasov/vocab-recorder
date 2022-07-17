@@ -1,10 +1,12 @@
 import { GetState } from "zustand";
 import { MergeState } from "zustand-ready";
+import { Coord } from "../../../types/Coord";
 import { PointedWord } from "../../../types/PointedWord";
 import { getMutations } from "../getMutations";
 import { OpenBox } from "./OpenBox";
 
 export type State = {
+  cursor: Coord | null,
   cursorPoint: PointedWord | null,
   openBox: OpenBox | null,
 }

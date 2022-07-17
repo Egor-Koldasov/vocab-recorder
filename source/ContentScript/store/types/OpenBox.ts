@@ -6,7 +6,8 @@ export type OpenBox = {
   translation: string,
   context: string,
   drag: {
-    pos: Coord | null,
+    shift: Coord,
     active: boolean,
+    dragStartPos: Coord | null,
   },
 };

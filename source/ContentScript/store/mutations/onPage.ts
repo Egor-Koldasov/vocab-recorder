@@ -1,21 +1,23 @@
-import { useEventListener } from "../../util/useEventListener";
+import { useListener } from "../../util/useListener";
 import { RefObject } from "react";
 import { sendMessage } from "../../sendMessage";
 import { keyTrigger } from "../../settings/box";
-import { mouseMoveToPoint } from "../../util/mouseMoveToPoint";
+import { mouseMoveToCursor, mouseMoveToSelectedWord } from "../../util/mouseMoveToPoint";
 import { getInitOpenBox } from "../derivations/getInitOpenBox";
 import { stateHasCursorPoint } from "../derivations/stateHasCursorPoint";
 import { Context } from "../types/Store";
 import { useMutations } from "../useStore";
+import throttle from "lodash/throttle";
 
 
 export const onPage = ({ get }: Context) => {
   return {
-    onPageMouseMove: (event: MouseEvent) => {
+    onPageMouseMove: throttle((event: MouseEvent) => {
       const { mutations } = get();
-      const point = mouseMoveToPoint(event);
-      mutations.update({ cursorPoint: point });
-    },
+      const point = mouseMoveToSelectedWord(event);
+      const cursor = mouseMoveToCursor(event);
+      mutations.update({ cursorPoint: point, cursor });
+    }, 100),
     onPageKeyDown: (event: KeyboardEvent) => {
       const { state, mutations } = get();
       if (event.key !== keyTrigger || !stateHasCursorPoint(state)) return;
@@ -40,12 +42,12 @@ export const onPage = ({ get }: Context) => {
 
 const useTrackPointedWord = () => {
   const { onPageMouseMove } = useMutations();
-  useEventListener('mousemove', onPageMouseMove);
+  useListener('mousemove', onPageMouseMove);
 };
 
 const useTrackKeyTrigger = () => {
   const { onPageKeyDown } = useMutations();
-  useEventListener('keydown', onPageKeyDown);
+  useListener('keydown', onPageKeyDown);
 };
 
 // const useCloseOnClickOutside = (openBoxRef: RefObject<HTMLDivElement | null>) => {

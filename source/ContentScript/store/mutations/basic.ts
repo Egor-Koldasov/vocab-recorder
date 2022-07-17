@@ -1,11 +1,10 @@
 import { PartialDeep } from 'type-fest';
-import { State } from 'zustand';
-import { Context } from '../types/Store';
+import { Context, State } from '../types/Store';
 
 
 export const basic = ({ merge }: Context) => ({
   update: (update: PartialDeep<State>) => {
-    console.debug('State update', update);
+    console.debug('State update', update, (new Error()).stack);
     return merge(update);
   },
 }) as const;

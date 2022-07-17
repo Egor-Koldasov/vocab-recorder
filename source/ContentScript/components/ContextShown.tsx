@@ -1,6 +1,6 @@
 import React, { ComponentProps } from "react";
 import styled from "styled-components";
-import { colors } from "./colors";
+import { colors } from "../settings/colors";
 
 
 export const ContextShownStyled = styled.textarea`

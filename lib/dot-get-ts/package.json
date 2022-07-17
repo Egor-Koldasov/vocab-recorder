@@ -1,0 +1,30 @@
+{
+  "name": "dot-get-ts",
+  "version": "0.0.1",
+  "description": "Strictly typed dot-get, that uses conditional types.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "get",
+    "dot-get-ts",
+    "dot-get",
+    "path",
+    "object",
+    "strict"
+  ],
+  "author": "Egor Koldasov",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/dlv": "^1.1.2",
+    "type-fest": "^2.16.0",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "dlv": "^1.1.3"
+  }
+}

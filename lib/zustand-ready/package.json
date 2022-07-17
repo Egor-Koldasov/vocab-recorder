@@ -1,0 +1,25 @@
+{
+  "name": "zustand-ready",
+  "version": "0.0.1",
+  "description": "High-level API for zustand ready to use.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zustand",
+    "zustand-ready"
+  ],
+  "author": "Egor Koldasov",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "dot-get-ts": "file:../dot-get-ts",
+    "type-fest": "^2.16.0"
+  }
+}

@@ -1,4 +1,4 @@
-import { State } from "../ContentScript/store/Store";
+import { State } from "../ContentScript/store/types/Store";
 import { ContentState } from "./ContentState";
 
 export type Message = {

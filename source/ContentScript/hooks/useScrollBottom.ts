@@ -7,7 +7,6 @@ export const useScrollBottom = () => {
   const scroll = useWindowScroll();
   return useMemo(() => {
     const scrollBot = scroll.y + size.y;
-    console.log('scrollBot', scrollBot, scroll.y, size.y);
     return scrollBot;
   }, [size, scroll]);
 };

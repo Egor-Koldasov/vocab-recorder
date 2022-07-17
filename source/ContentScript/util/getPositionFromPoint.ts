@@ -1,6 +1,16 @@
+type CaretPosition = {
+  readonly offset: number;
+  readonly offsetNode: Node;
+  getClientRect(): DOMRect | null;
+}
+type DocumentPatched = Document & {
+  caretPositionFromPoint: (x: number, y: number) => CaretPosition | null
+}
+
 export const getPositionFromPoint = (x: number, y: number) => {
-  if (document.caretRangeFromPoint) {
-    const range = document.caretRangeFromPoint(x, y);
+  const doc = document as DocumentPatched;
+  if (doc.caretRangeFromPoint) {
+    const range = doc.caretRangeFromPoint(x, y);
     if (!range)
       return null;
     return {
@@ -8,8 +18,8 @@ export const getPositionFromPoint = (x: number, y: number) => {
       offset: range.startOffset,
     };
   }
-  if (document.caretPositionFromPoint) {
-    return document.caretPositionFromPoint(x, y);
+  if (doc.caretPositionFromPoint) {
+    return doc.caretPositionFromPoint(x, y);
   }
   throw new Error('Browser does not support caretRangeFromPoint or caretPositionFromPoint');
 };

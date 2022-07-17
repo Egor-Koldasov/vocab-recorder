@@ -1,4 +1,4 @@
-import { Content } from "./components/Content";
+import { OnPageBox } from "./components/OnPageBox";
 import ReactDOM from 'react-dom';
 import React from 'react';
 
@@ -7,5 +7,5 @@ export const render = () => {
   const root = document.createElement('div');
   root.id = id;
   document.body.append(root);
-  ReactDOM.render(<Content />, document.getElementById(id));
+  ReactDOM.render(<OnPageBox />, document.getElementById(id));
 }

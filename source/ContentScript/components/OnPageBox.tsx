@@ -51,13 +51,13 @@ export const OnPageBox = () => {
     onContextChange,
     onTranslationChange,
     onCloseClick,
-    // update,
+    updateByPath,
   } = useMutations();
   const boxCoords = useBoxCoords();
   useOnPageEffects();
-  // useEffect(() => {
-  //   if (openBox) update({ openBox: { ref } });
-  // }, [])
+  useEffect(() => {
+    if (openBox) updateByPath('openBox', { ref: () => ref });
+  }, [ref])
 
   if (!openBox) return null;
   return (

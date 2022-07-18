@@ -6,7 +6,7 @@ export type OpenBox = {
   point: PointedWord,
   translation: string,
   context: string,
-  ref: RefObject<HTMLDivElement | null> | null,
+  ref: (() => (RefObject<HTMLDivElement | null>)) | null,
   drag: {
     shift: Coord,
     active: boolean,

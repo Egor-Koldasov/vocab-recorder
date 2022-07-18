@@ -6,22 +6,20 @@ export const openBox = ({ get }: Context) => {
   return {
     onContextChange: (event: ChangeEvent<HTMLTextAreaElement>) => {
       const { mutations } = get();
-      mutations.update({ openBox: { context: event.currentTarget.value } });
+      mutations.updateByPath('openBox', { context: event.currentTarget.value });
     },
     onTranslationChange: (event: ChangeEvent<HTMLTextAreaElement>) => {
       const { mutations } = get();
-      mutations.update({ openBox: { translation: event.currentTarget.value } });
+      mutations.updateByPath('openBox', { translation: event.currentTarget.value });
     },
     onCloseClick: () => {
       get().mutations.update({ openBox: null });
     },
     onDragMouseDown: (event: MouseEvent) => {
-      get().mutations.update({
-        openBox: {
-          drag: {
-            active: true,
-            dragStartPos: { x: event.clientX, y: event.clientY },
-          }
+      get().mutations.updateByPath('openBox', {
+        drag: {
+          active: true,
+          dragStartPos: { x: event.clientX, y: event.clientY },
         }
       });
     },
@@ -31,12 +29,10 @@ export const openBox = ({ get }: Context) => {
       console.log('dragShift', dragShift);
       const dragStartPos = state.openBox?.drag.dragStartPos;
       if (!dragStartPos) return;
-      mutations.update({
-        openBox: {
-          drag: {
-            active: false,
-            shift: dragShift,
-          }
+      mutations.updateByPath('openBox', {
+        drag: {
+          active: false,
+          shift: dragShift,
         }
       })
     }

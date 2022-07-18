@@ -1,31 +1,36 @@
-import _create, { EqualityChecker, GetState, SetState, StateSelector } from 'zustand'
+import _create, { GetState, SetState } from 'zustand'
 import shallow from 'zustand/shallow'
 import { get, Path, Get } from 'dot-get-ts'
 
-import { PartialDeep } from 'type-fest';
-import { CreateStoreParams, GetMutations, State, Store, StoreContext } from './Store';
+import { AnyObject, CreateStoreParams, DefaultUpdate, GetMutations, Store, StoreContext } from './Store';
 import { mergeExceptArrays } from './util/mergeExceptArrays';
 
 
-const createMerge = <S extends Store>(set: SetState<S>) => (partial: PartialDeep<State<S>>) => {
-  const update = { state: partial };
-  return set((store): S => mergeExceptArrays(store, update), true);
-}
-
-const makeStoreContext = <S extends Store>(set: SetState<S>, get: GetState<S>): StoreContext<S> => {
-  return {
-    merge: createMerge(set),
-    get
+const createMerge =
+  <S extends Store, Update = DefaultUpdate<S>>
+  (set: SetState<S>) => (partial: Update) => {
+    const update = { state: partial };
+    return set((store): S => mergeExceptArrays(store, update), true);
   }
-}
 
-const mergeWrapper = <S extends Store>(creator: (params: StoreContext<S>) => S) =>
+const makeStoreContext =
+  <S extends Store, Update = DefaultUpdate<S>>
+  (set: SetState<S>, get: GetState<S>): StoreContext<S, Update> => {
+    return {
+      merge: createMerge(set),
+      get
+    }
+  }
+
+const mergeWrapper = <S extends Store, Update = DefaultUpdate<S>>
+  (creator: (params: StoreContext<S, Update>) => S) =>
   (set: SetState<S>, get: GetState<S>) => creator(makeStoreContext(set, get));
 
 export const createBasic =
-  <St extends {}, Mt extends {}>(initialState: St, getMutations: GetMutations<Store<St, Mt>>) => {
+  <St extends AnyObject, Mt extends AnyObject, Update = DefaultUpdate<Store<St, Mt>>>
+  (initialState: St, getMutations: GetMutations<Store<St, Mt>, Update>) => {
     type S = Store<St, Mt>;
-    const cb = mergeWrapper((context: StoreContext<S>): S => ({
+    const cb = mergeWrapper((context: StoreContext<S, Update>): S => ({
       state: initialState,
       mutations: getMutations(context),
     }));
@@ -33,10 +38,11 @@ export const createBasic =
   }
 
 export const create =
-  <St extends {}, Mt extends {}>(params: CreateStoreParams<St, Mt>) => {
-    const useStoreSelector = createBasic<St, Mt>(params.initialState, params.getMutations);
+  <St extends AnyObject, Mt extends AnyObject, Update = DefaultUpdate<Store<St, Mt>>>
+  (params: CreateStoreParams<St, Mt, Update>) => {
+    const useStoreSelector = createBasic<St, Mt, Update>(params.initialState, params.getMutations);
     const useStore =
-      <U>(picker: StateSelector<Store<St, Mt>, U>, comp: EqualityChecker<U> | undefined = shallow) =>
+      <U>(picker: (store: Store<St, Mt>) => U, comp: ((a: U, b: U) => boolean) | undefined = shallow) =>
         useStoreSelector(picker, comp);
     const useStoreStateSelector = <R>(selector: ((state: St) => R)): R => {
       return useStore((store) => selector(store.state));

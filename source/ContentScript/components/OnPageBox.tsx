@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import styled, { css, StyleSheetManager } from 'styled-components';
 import { Coord } from '../../types/Coord';
-import { useMutations, useStoreState } from '../store/useStore';
+import { useMutations, useStoreStateSelector } from '../store/useStore';
 import { colors } from '../settings/colors';
 import { ContextShown } from './ContextShown';
 import { Label } from './Label';
@@ -9,7 +9,6 @@ import { TextGroup } from './TextGroup';
 import { BoxHeader } from './BoxHeader';
 import { SelectedWord } from './SelectedWord';
 import { BoxContent } from './BoxContent';
-import { gaps } from '../settings/box';
 import { stylisAddImportant } from '../util/stylisAddImportant';
 import { useBoxCoords } from '../store/derivations/useBoxCoords';
 import { useOnPageEffects } from '../store/mutations/onPage';
@@ -17,6 +16,7 @@ import { ButtonBar } from './ButtonBar';
 import { Button } from './Button';
 import { font } from '../settings/font';
 import { DragButton } from './DragButton';
+import { debugObjectChange } from '../util/debugObjectChange';
 
 
 type ContentStyledProps = {
@@ -31,7 +31,6 @@ export const ContentStyled = styled.div<ContentStyledProps>`
   left: 0;
   font-family: sans-serif;
   font-size: ${font.base}px;
-  padding: ${gaps.boxPadding}px;
   display: flex;
   flex-direction: column;
   border: 3px solid ${colors.border};
@@ -43,10 +42,10 @@ export const ContentStyled = styled.div<ContentStyledProps>`
   `}
   transform: translateX(-50%);
 `;
-
+const testBox = debugObjectChange('openBox');
 export const OnPageBox = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const { openBox } = useStoreState();
+  const openBox = useStoreStateSelector((state) => state.openBox);
   const {
     onContextChange,
     onTranslationChange,
@@ -56,8 +55,10 @@ export const OnPageBox = () => {
   const boxCoords = useBoxCoords();
   useOnPageEffects();
   useEffect(() => {
-    if (openBox) updateByPath('openBox', { ref: () => ref });
-  }, [ref])
+    console.log('openBox', openBox);
+    testBox(openBox);
+    if (openBox && !openBox.ref) updateByPath('openBox', { ref: () => ref });
+  }, [openBox, ref])
 
   if (!openBox) return null;
   return (

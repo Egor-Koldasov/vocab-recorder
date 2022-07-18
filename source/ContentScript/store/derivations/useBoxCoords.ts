@@ -21,8 +21,8 @@ export const useBoxAutoCoords = () => {
 export const getDraggingShift = (state: State) => {
   const drag = state.openBox?.drag;
   const cursor = state.cursor;
-  if (drag?.active && cursor && drag.dragStartPos) {
-    return subtractCoords(drag.dragStartPos, cursor);
+  if (drag?.active && cursor && drag.mouseInBoxPos) {
+    return subtractCoords(cursor, drag.mouseInBoxPos);
   }
   return { x: 0, y: 0 };
 }
@@ -32,10 +32,10 @@ export const useBoxCoords = () => {
   const draggingShift = useStoreStateSelector(getDraggingShift);
   const drag = useStoreStateSelector((state) => state.openBox?.drag);
   if (drag?.active) {
-    return subtractCoords(autoCoords, draggingShift);
+    return draggingShift;
   }
-  if (!drag?.active && drag?.shift) {
-    return subtractCoords(autoCoords, drag.shift);
+  if (!drag?.active && drag?.movedPos) {
+    return drag.movedPos;
   }
   return autoCoords;
 }

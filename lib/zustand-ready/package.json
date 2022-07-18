@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "dot-get-ts": "file:../dot-get-ts",
+    "immer": "^9.0.15",
     "type-fest": "^2.16.0"
   }
 }

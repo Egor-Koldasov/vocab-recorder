@@ -8,8 +8,8 @@ export type OpenBox = {
   context: string,
   ref: (() => (RefObject<HTMLDivElement | null>)) | null,
   drag: {
-    shift: Coord,
+    movedPos: Coord | null,
     active: boolean,
-    dragStartPos: Coord | null,
+    mouseInBoxPos: Coord | null,
   },
 };

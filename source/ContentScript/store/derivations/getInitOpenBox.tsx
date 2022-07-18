@@ -8,9 +8,9 @@ export const getInitOpenBox = (state: StateWithCursorPoint): OpenBox => {
     context: state.cursorPoint.context,
     ref: null,
     drag: {
-      shift: { x: 0, y: 0 },
+      movedPos: null,
       active: false,
-      dragStartPos: null,
+      mouseInBoxPos: null,
     },
   };
   return openBox;

@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react";
+import { getMouseInBoxPos } from "../derivations/getMouseInBoxPos";
 import { getDraggingShift } from "../derivations/useBoxCoords";
 import { Context } from "../types/Store";
 
@@ -16,10 +17,13 @@ export const openBox = ({ get }: Context) => {
       get().mutations.update({ openBox: null });
     },
     onDragMouseDown: (event: MouseEvent) => {
-      get().mutations.updateByPath('openBox', {
+      console.log('onDragMouseDown');
+      const { state, mutations } = get();
+      const mouseInBoxPos = getMouseInBoxPos(state, event);
+      mutations.updateByPath('openBox', {
         drag: {
           active: true,
-          dragStartPos: { x: event.clientX, y: event.clientY },
+          mouseInBoxPos,
         }
       });
     },
@@ -27,12 +31,12 @@ export const openBox = ({ get }: Context) => {
       const { state, mutations } = get();
       const dragShift = getDraggingShift(state);
       console.log('dragShift', dragShift);
-      const dragStartPos = state.openBox?.drag.dragStartPos;
-      if (!dragStartPos) return;
+      const mouseInBoxPos = state.openBox?.drag.mouseInBoxPos;
+      if (!mouseInBoxPos) return;
       mutations.updateByPath('openBox', {
         drag: {
           active: false,
-          shift: dragShift,
+          movedPos: dragShift,
         }
       })
     }

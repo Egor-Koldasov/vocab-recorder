@@ -1,7 +1,7 @@
 import _create, { GetState, SetState } from 'zustand'
+import produce from 'immer'
 import shallow from 'zustand/shallow'
 import { get, Path, Get } from 'dot-get-ts'
-
 import { AnyObject, CreateStoreParams, DefaultUpdate, GetMutations, Store, StoreContext } from './Store';
 import { mergeExceptArrays } from './util/mergeExceptArrays';
 
@@ -10,7 +10,11 @@ const createMerge =
   <S extends Store, Update = DefaultUpdate<S>>
   (set: SetState<S>) => (partial: Update) => {
     const update = { state: partial };
-    return set((store): S => mergeExceptArrays(store, update), true);
+    return set((store): S => {
+      const nextStore =
+        produce(store, (storeDraft) => { mergeExceptArrays(storeDraft, update) });
+      return nextStore as S;
+    },  true);
   }
 
 const makeStoreContext =

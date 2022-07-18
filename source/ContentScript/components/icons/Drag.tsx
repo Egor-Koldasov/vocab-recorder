@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 
 export const DragStyled = styled.svg`
-  
+  user-select: none;
 `;
 export const Drag = (props: ComponentProps<typeof DragStyled>) => {
   return (

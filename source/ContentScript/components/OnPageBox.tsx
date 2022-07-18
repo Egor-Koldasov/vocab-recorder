@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled, { css, StyleSheetManager } from 'styled-components';
 import { Coord } from '../../types/Coord';
 import { useMutations, useStoreState } from '../store/useStore';
@@ -45,22 +45,26 @@ export const ContentStyled = styled.div<ContentStyledProps>`
 `;
 
 export const OnPageBox = () => {
-  // const ref = useRef<HTMLDivElement>(null);
-  const { openBox } = useStoreState();
+  const ref = useRef<HTMLDivElement>(null);
+  const {openBox } = useStoreState();
   const {
     onContextChange,
     onTranslationChange,
     onCloseClick,
+    update,
   } = useMutations();
   const boxCoords = useBoxCoords();
   useOnPageEffects();
+  useEffect(() => {
+    update({ openBox: { ref } });
+  }, [])
 
   if (!openBox) return null;
   return (
     <StyleSheetManager stylisPlugins={[stylisAddImportant]}>
       <ContentStyled
         cursor={boxCoords}
-        // ref={ref}
+        ref={ref}
       >
         <BoxHeader>
           <DragButton />

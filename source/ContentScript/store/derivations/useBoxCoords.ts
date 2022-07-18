@@ -23,7 +23,7 @@ export const getDraggingShift = (state: State) => {
   const cursor = state.cursor;
   if (drag?.active && cursor && drag.dragStartPos) {
     return subtractCoords(drag.dragStartPos, cursor);
-  };
+  }
   return { x: 0, y: 0 };
 }
 
@@ -33,7 +33,7 @@ export const useBoxCoords = () => {
   const drag = useStoreStateSelector((state) => state.openBox?.drag);
   if (drag?.active) {
     return subtractCoords(autoCoords, draggingShift);
-  };
+  }
   if (!drag?.active && drag?.shift) {
     return subtractCoords(autoCoords, drag.shift);
   }

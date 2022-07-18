@@ -46,18 +46,18 @@ export const ContentStyled = styled.div<ContentStyledProps>`
 
 export const OnPageBox = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const {openBox } = useStoreState();
+  const { openBox } = useStoreState();
   const {
     onContextChange,
     onTranslationChange,
     onCloseClick,
-    update,
+    // update,
   } = useMutations();
   const boxCoords = useBoxCoords();
   useOnPageEffects();
-  useEffect(() => {
-    update({ openBox: { ref } });
-  }, [])
+  // useEffect(() => {
+  //   if (openBox) update({ openBox: { ref } });
+  // }, [])
 
   if (!openBox) return null;
   return (

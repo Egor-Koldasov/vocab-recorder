@@ -21,12 +21,12 @@ const extensionReloaderPlugin =
   nodeEnv === 'development'
     ? new ExtensionReloader({
         port: 9090,
-        reloadPage: true,
+        reloadPage: false,
         entries: {
           // TODO: reload manifest on update
           contentScript: 'contentScript',
           background: 'background',
-          extensionPage: ['popup', 'options'],
+          extensionPage: ['popup', 'savedWords'],
         },
       })
     : () => {
@@ -62,7 +62,7 @@ module.exports = {
     background: path.join(sourcePath, 'Background', 'index.ts'),
     contentScript: path.join(sourcePath, 'ContentScript', 'index.ts'),
     popup: path.join(sourcePath, 'Popup', 'index.tsx'),
-    options: path.join(sourcePath, 'Options', 'index.tsx'),
+    savedWords: path.join(sourcePath, 'SavedWordsPage', 'index.tsx'),
   },
 
   output: {
@@ -159,11 +159,11 @@ module.exports = {
       filename: 'popup.html',
     }),
     new HtmlWebpackPlugin({
-      template: path.join(viewsPath, 'options.html'),
+      template: path.join(viewsPath, 'savedWords.html'),
       inject: 'body',
-      chunks: ['options'],
+      chunks: ['savedWords'],
       hash: true,
-      filename: 'options.html',
+      filename: 'savedWords.html',
     }),
     // write css file(s) to build folder
     new MiniCssExtractPlugin({filename: 'css/[name].css'}),

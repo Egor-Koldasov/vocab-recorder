@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { gaps } from "../settings/box";
-import { colors } from "../settings/colors";
+import { gaps } from "../../settings/box";
+import { colors } from "../../settings/colors";
 import { DragStyled } from "./icons/Drag";
 
 export const BoxHeader = styled.div`
@@ -11,6 +11,8 @@ export const BoxHeader = styled.div`
   border-radius: 5px 5px 0 0;
   margin: -2px;
   margin-bottom: ${gaps.boxPadding}px;
+  color: ${colors.textHeader};
+  align-items: center;
   ${DragStyled} {
     cursor: move;
     margin-right: ${gaps.boxPadding}px;

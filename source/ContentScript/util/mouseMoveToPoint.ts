@@ -11,13 +11,21 @@ export const mouseMoveToCursor = (event: MouseEvent): Coord => {
 export const mouseMoveToSelectedWord = (event: MouseEvent): PointedWord | null => {
   const range = getPositionFromPoint(event.clientX, event.clientY);
   const cursor = mouseMoveToCursor(event);
-  if (!range || !range.offsetNode.textContent) return null;
+  if (!range || !range.offsetNode.textContent) {
+    console.debug('no range found', event);
+    return null;
+  }
   const word = getWordByOffset(range.offsetNode.textContent, range.offset);
   const selection = window.getSelection()?.toString();
+  const isSingleWordSelected = selection && !!selection.match(/^((\p{L})|[-_])+$/u);
+  const context =
+    (selection && !isSingleWordSelected) ?
+      selection :
+      range.offsetNode.textContent;
   // console.log('word', rect, range.offsetNode);
   return {
     word,
-    context: selection || range.offsetNode.textContent,
+    context: context.trim(),
     offset: range.offset,
     cursor,
   };

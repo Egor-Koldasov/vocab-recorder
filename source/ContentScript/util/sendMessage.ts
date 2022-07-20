@@ -1,4 +1,4 @@
-import { Message } from "../types/Message";
+import { Message } from "../../types/Message";
 import browser from 'webextension-polyfill';
 
 export const sendMessage = async (message: Message) => {

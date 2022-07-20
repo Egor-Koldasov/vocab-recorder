@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { font } from "../settings/font";
+import { font } from "../../settings/font";
 
 export const Label = styled.label`
   font-weight: 300;

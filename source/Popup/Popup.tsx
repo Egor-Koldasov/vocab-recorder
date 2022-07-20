@@ -15,10 +15,10 @@ const Popup: React.FC = () => {
         id="options__button"
         type="button"
         onClick={(): Promise<Tabs.Tab> => {
-          return openWebPage('options.html');
+          return openWebPage('savedWords.html');
         }}
       >
-        Options Page
+        Saved words
       </button>
       <div className="links__holder">
         <ul>

@@ -6,12 +6,17 @@ import { Coord } from "../../../types/Coord";
 import { PointedWord } from "../../../types/PointedWord";
 import { getMutations } from "../getMutations";
 import { OpenBox } from "./OpenBox";
+import { languages } from 'countries-list';
 
 
+export type LanguageKey = keyof typeof languages;
 export type State = {
   cursor: Coord | null,
   cursorPoint: PointedWord | null,
   openBox: OpenBox | null,
+  contextMenuWord: PointedWord | null,
+  targetLanguage: LanguageKey,
+  sourceLanguage: LanguageKey | null,
 }
 export type Mutations = ReturnType<typeof getMutations>
 export type Store = {
@@ -20,6 +25,9 @@ export type Store = {
 }
 export type StateWithCursorPoint = State & {
   cursorPoint: PointedWord,
+}
+export type StateWithContextPoint = State & {
+  contextMenuWord: PointedWord,
 }
 export type StateUpdate = PartialDeepKeepNullUnion<State>;
 

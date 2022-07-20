@@ -1,4 +1,4 @@
-const isWordBreakChar = (char: string) => !char.match(/(\w)|[-_]/);
+const isWordBreakChar = (char: string) => !char.match(/(\p{L})|[-_]/u);
 export const getWordByOffset = (string: string, offset: number) => {
   if (offset < 0 || offset > string.length)
     throw new Error('Offset is out of boundary');

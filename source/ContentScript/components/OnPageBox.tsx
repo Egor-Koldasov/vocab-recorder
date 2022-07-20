@@ -2,21 +2,22 @@ import React, { useEffect, useRef } from 'react';
 import styled, { css, StyleSheetManager } from 'styled-components';
 import { Coord } from '../../types/Coord';
 import { useMutations, useStoreStateSelector } from '../store/useStore';
-import { colors } from '../settings/colors';
+import { colors } from '../../settings/colors';
 import { ContextShown } from './ContextShown';
 import { Label } from './Label';
 import { TextGroup } from './TextGroup';
 import { BoxHeader } from './BoxHeader';
 import { SelectedWord } from './SelectedWord';
-import { BoxContent } from './BoxContent';
+import { BoxContent, BoxContentRow } from './BoxContent';
 import { stylisAddImportant } from '../util/stylisAddImportant';
 import { useBoxCoords } from '../store/derivations/useBoxCoords';
 import { useOnPageEffects } from '../store/mutations/onPage';
 import { ButtonBar } from './ButtonBar';
-import { Button } from './Button';
-import { font } from '../settings/font';
+import { Button } from '../../components/Button';
+import { font } from '../../settings/font';
 import { DragButton } from './DragButton';
-import { debugObjectChange } from '../util/debugObjectChange';
+import { QuickLinkList } from './QuickLinkList';
+import { languages } from 'countries-list';
 
 
 type ContentStyledProps = {
@@ -40,23 +41,30 @@ export const ContentStyled = styled.div<ContentStyledProps>`
     top: ${cursor.y}px;
     left: ${cursor.x}px;
   `}
-  transform: translateX(-50%);
 `;
-const testBox = debugObjectChange('openBox');
 export const OnPageBox = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const openBox = useStoreStateSelector((state) => state.openBox);
+  const [
+    openBox,
+    sourceLanguage,
+    targetLanguage,
+  ] = useStoreStateSelector((state) => [
+    state.openBox,
+    state.sourceLanguage,
+    state.targetLanguage,
+  ]);
   const {
     onContextChange,
     onTranslationChange,
-    onCloseClick,
+    closeBox,
     updateByPath,
+    onSelectedWordChange,
+    save,
+    saveAndClose,
   } = useMutations();
   const boxCoords = useBoxCoords();
   useOnPageEffects();
   useEffect(() => {
-    console.log('openBox', openBox);
-    testBox(openBox);
     if (openBox && !openBox.ref) updateByPath('openBox', { ref: () => ref });
   }, [openBox, ref])
 
@@ -69,26 +77,72 @@ export const OnPageBox = () => {
       >
         <BoxHeader>
           <DragButton />
-          <SelectedWord>{openBox.point.word}</SelectedWord>
+          <SelectedWord
+            value={openBox.point.word}
+            onChange={onSelectedWordChange}
+          />
         </BoxHeader>
         <BoxContent>
-          <TextGroup>
-            <Label>Translation</Label>
-            <ContextShown
-              value={openBox.translation}
-              onChange={onTranslationChange}
-            />
-          </TextGroup>
-          <TextGroup>
-            <Label>Context</Label>
-            <ContextShown
-              value={openBox.context}
-              onChange={onContextChange}
-            />
-          </TextGroup>
+          <BoxContentRow>
+            <QuickLinkList>
+              <a
+                href={`https://translate.google.com/?sl=${sourceLanguage}&tl=${targetLanguage}&text=${openBox.point.word}`}
+                target={
+                  window.location.hostname === 'translate.google.com' ?
+                    '_self' :
+                    '_blank'
+                }
+                rel="noreferrer"
+              >
+                GTranslate
+              </a>
+              <a
+                href={`https://${targetLanguage}.glosbe.com/${sourceLanguage}/${targetLanguage}/${openBox.point.word}`}
+                target={
+                  window.location.hostname === `${targetLanguage}.glosbe.com` ?
+                    '_self' :
+                    '_blank'
+                }
+                rel="noreferrer"
+              >
+                Glosbe
+              </a>
+              {sourceLanguage && (
+                <a
+                  href={`https://context.reverso.net/translation/${languages[sourceLanguage].name.toLocaleLowerCase()}-${languages[targetLanguage].name.toLocaleLowerCase()}/${openBox.point.word}`}
+                  target={
+                    window.location.hostname === 'context.reverso.net' ?
+                      '_self' :
+                      '_blank'
+                  }
+                  rel="noreferrer"
+                >
+                  Reverso
+                </a>
+              )}
+            </QuickLinkList>
+          </BoxContentRow>
+          <BoxContentRow>
+            <TextGroup>
+              <Label>Translation</Label>
+              <ContextShown
+                value={openBox.translation}
+                onChange={onTranslationChange}
+              />
+            </TextGroup>
+            <TextGroup>
+              <Label>Context</Label>
+              <ContextShown
+                value={openBox.context}
+                onChange={onContextChange}
+              />
+            </TextGroup>
+          </BoxContentRow>
         </BoxContent>
         <ButtonBar>
-          <Button onClick={onCloseClick}>Close</Button>
+          <Button onClick={closeBox}>Close</Button>
+          <Button onClick={save}>Save</Button>
+          <Button onClick={saveAndClose}>Save and close</Button>
         </ButtonBar>
       </ContentStyled>
     </StyleSheetManager>

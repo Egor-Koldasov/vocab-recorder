@@ -7,5 +7,6 @@ export const Button = styled.button.attrs({ type: 'button' })`
   border-radius: 5px;
   border: 1px solid ${colors.textMain};
   padding: ${gaps.buttonY}px ${gaps.buttonX}px;
-  font-size: ${font.base};
+  font-size: ${font.base}px;
+  cursor: pointer;
 `;

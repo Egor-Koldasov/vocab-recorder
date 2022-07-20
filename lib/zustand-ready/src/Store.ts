@@ -1,4 +1,4 @@
-import { PartialDeep } from 'type-fest';
+import { PartialDeepKeepNullUnion } from 'partial-deep-keep-union/dist/PartialDeepKeepUnion';
 import { GetState } from 'zustand';
 
 
@@ -10,7 +10,7 @@ export type Store<State extends AnyObject = AnyObject, Mutations extends AnyObje
 
 export type State<S extends Store> = S['state'];
 export type Mutations<S extends Store> = S['mutations'];
-export type DefaultUpdate<S extends Store> = PartialDeep<State<S>>;
+export type DefaultUpdate<S extends Store> = PartialDeepKeepNullUnion<State<S>>;
 
 export type MergeState<S extends Store, Update = DefaultUpdate<S>> =
   (partial: Update) => void |

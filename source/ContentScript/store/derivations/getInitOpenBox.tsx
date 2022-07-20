@@ -1,11 +1,13 @@
+import { PointedWord } from '../../../types/PointedWord';
 import { OpenBox } from '../types/OpenBox';
-import { StateWithContextPoint } from '../types/Store';
+import { State } from '../types/Store';
 
-export const getInitOpenBox = (state: StateWithContextPoint): OpenBox => {
+export const getInitOpenBox = (_: State, word: PointedWord): OpenBox => {
   const openBox: OpenBox = {
-    point: state.contextMenuWord,
+    open: true,
+    point: word,
     translation: '',
-    context: state.contextMenuWord.context,
+    context: word.context,
     ref: null,
     drag: {
       movedPos: null,

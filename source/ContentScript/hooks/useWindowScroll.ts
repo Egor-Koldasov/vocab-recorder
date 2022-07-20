@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
 import { Coord } from "../../types/Coord"
 
+export const getWindowScroll = () => {
+  return { x: window.scrollX, y: window.scrollY };
+}
 export const useWindowScroll = () => {
-  const [scroll, setScroll] = useState<Coord>({ x: window.scrollX, y: window.scrollY });
+  const [scroll, setScroll] = useState<Coord>(getWindowScroll());
   const onScroll = () => {
-    setScroll({ x: window.scrollX, y: window.scrollY });
+    setScroll(getWindowScroll());
   };
   useEffect(() => {
     window.addEventListener('scroll', onScroll);

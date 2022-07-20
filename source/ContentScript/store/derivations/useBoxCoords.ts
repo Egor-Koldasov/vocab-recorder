@@ -1,5 +1,5 @@
 import { useScrollBottom } from "../../hooks/useScrollBottom";
-import { useWindowScroll } from "../../hooks/useWindowScroll";
+import { getWindowScroll, useWindowScroll } from "../../hooks/useWindowScroll";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { boxHeight, boxWidth } from "../../../settings/box";
 import { addCoords } from "../../util/addCoords";
@@ -23,10 +23,11 @@ export const useBoxAutoCoords = () => {
 }
 
 export const getDraggingShift = (state: State) => {
+  const windowScroll = getWindowScroll();
   const drag = state.openBox?.drag;
   const cursor = state.cursor;
   if (drag?.active && cursor && drag.mouseInBoxPos) {
-    return subtractCoords(cursor, drag.mouseInBoxPos);
+    return subtractCoords(addCoords(windowScroll, cursor), drag.mouseInBoxPos);
   }
   return { x: 0, y: 0 };
 }

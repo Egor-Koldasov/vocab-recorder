@@ -1,11 +1,21 @@
 import { OnPageBox } from "./components/OnPageBox";
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import React from 'react';
+import { StyleSheetManager } from "styled-components";
+import { stylisAddImportant } from "./util/stylisAddImportant";
 
 export const render = () => {
   const id = 'vocab-recorder-root' as const;
   const root = document.createElement('div');
+  const styles = document.createElement('div');
+  const shadow = root.attachShadow({ mode: 'closed' });
   root.id = id;
+  shadow.append(styles);
   document.body.append(root);
-  ReactDOM.render(<OnPageBox />, document.getElementById(id));
+  const reactRoot = createRoot(shadow);
+  reactRoot.render(
+    <StyleSheetManager target={styles} stylisPlugins={[stylisAddImportant]}>
+      <OnPageBox />
+    </StyleSheetManager>
+  );
 }

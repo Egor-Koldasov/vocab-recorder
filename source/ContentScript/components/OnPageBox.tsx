@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import styled, { css, StyleSheetManager } from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Coord } from '../../types/Coord';
 import { useMutations, useStoreStateSelector } from '../store/useStore';
 import { colors } from '../../settings/colors';
@@ -9,7 +9,6 @@ import { TextGroup } from './TextGroup';
 import { BoxHeader } from './BoxHeader';
 import { SelectedWord } from './SelectedWord';
 import { BoxContent, BoxContentRow } from './BoxContent';
-import { stylisAddImportant } from '../util/stylisAddImportant';
 import { useBoxCoords } from '../store/derivations/useBoxCoords';
 import { useOnPageEffects } from '../store/mutations/onPage';
 import { ButtonBar } from './ButtonBar';
@@ -70,81 +69,79 @@ export const OnPageBox = () => {
 
   if (!openBox) return null;
   return (
-    <StyleSheetManager stylisPlugins={[stylisAddImportant]}>
-      <ContentStyled
-        cursor={boxCoords}
-        ref={ref}
-      >
-        <BoxHeader>
-          <DragButton />
-          <SelectedWord
-            value={openBox.point.word}
-            onChange={onSelectedWordChange}
-          />
-        </BoxHeader>
-        <BoxContent>
-          <BoxContentRow>
-            <QuickLinkList>
+    <ContentStyled
+      cursor={boxCoords}
+      ref={ref}
+    >
+      <BoxHeader>
+        <DragButton />
+        <SelectedWord
+          value={openBox.point.word}
+          onChange={onSelectedWordChange}
+        />
+      </BoxHeader>
+      <BoxContent>
+        <BoxContentRow>
+          <QuickLinkList>
+            <a
+              href={`https://translate.google.com/?sl=${sourceLanguage}&tl=${targetLanguage}&text=${openBox.point.word}`}
+              target={
+                window.location.hostname === 'translate.google.com' ?
+                  '_self' :
+                  '_blank'
+              }
+              rel="noreferrer"
+            >
+              GTranslate
+            </a>
+            <a
+              href={`https://${targetLanguage}.glosbe.com/${sourceLanguage}/${targetLanguage}/${openBox.point.word}`}
+              target={
+                window.location.hostname === `${targetLanguage}.glosbe.com` ?
+                  '_self' :
+                  '_blank'
+              }
+              rel="noreferrer"
+            >
+              Glosbe
+            </a>
+            {sourceLanguage && (
               <a
-                href={`https://translate.google.com/?sl=${sourceLanguage}&tl=${targetLanguage}&text=${openBox.point.word}`}
+                href={`https://context.reverso.net/translation/${languages[sourceLanguage].name.toLocaleLowerCase()}-${languages[targetLanguage].name.toLocaleLowerCase()}/${openBox.point.word}`}
                 target={
-                  window.location.hostname === 'translate.google.com' ?
+                  window.location.hostname === 'context.reverso.net' ?
                     '_self' :
                     '_blank'
                 }
                 rel="noreferrer"
               >
-                GTranslate
+                Reverso
               </a>
-              <a
-                href={`https://${targetLanguage}.glosbe.com/${sourceLanguage}/${targetLanguage}/${openBox.point.word}`}
-                target={
-                  window.location.hostname === `${targetLanguage}.glosbe.com` ?
-                    '_self' :
-                    '_blank'
-                }
-                rel="noreferrer"
-              >
-                Glosbe
-              </a>
-              {sourceLanguage && (
-                <a
-                  href={`https://context.reverso.net/translation/${languages[sourceLanguage].name.toLocaleLowerCase()}-${languages[targetLanguage].name.toLocaleLowerCase()}/${openBox.point.word}`}
-                  target={
-                    window.location.hostname === 'context.reverso.net' ?
-                      '_self' :
-                      '_blank'
-                  }
-                  rel="noreferrer"
-                >
-                  Reverso
-                </a>
-              )}
-            </QuickLinkList>
-          </BoxContentRow>
-          <BoxContentRow>
-            <TextGroup>
-              <Label>Translation</Label>
-              <ContextShown
-                value={openBox.translation}
-                onChange={onTranslationChange}
-              />
-            </TextGroup>
-            <TextGroup>
-              <Label>Context</Label>
-              <ContextShown
-                value={openBox.context}
-                onChange={onContextChange}
-              />
-            </TextGroup>
-          </BoxContentRow>
-        </BoxContent>
-        <ButtonBar>
-          <Button onClick={closeBox}>Close</Button>
-          <Button onClick={save}>Save</Button>
-          <Button onClick={saveAndClose}>Save and close</Button>
-        </ButtonBar>
-      </ContentStyled>
-    </StyleSheetManager>
+            )}
+          </QuickLinkList>
+        </BoxContentRow>
+        <BoxContentRow>
+          <TextGroup>
+            <Label>Translation</Label>
+            <ContextShown
+              value={openBox.translation}
+              onChange={onTranslationChange}
+            />
+          </TextGroup>
+          <TextGroup>
+            <Label>Context</Label>
+            <ContextShown
+              value={openBox.context}
+              onChange={onContextChange}
+            />
+          </TextGroup>
+        </BoxContentRow>
+      </BoxContent>
+      <ButtonBar>
+        <Button onClick={closeBox}>Close</Button>
+        <Button onClick={save}>Save</Button>
+        <Button onClick={saveAndClose}>Save and close</Button>
+      </ButtonBar>
+    </ContentStyled>
   );
 };

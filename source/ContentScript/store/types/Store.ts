@@ -12,8 +12,10 @@ import { languages } from 'countries-list';
 export type LanguageKey = keyof typeof languages;
 export type State = {
   cursor: Coord | null,
-  cursorPoint: PointedWord | null,
+  cursorWord: PointedWord | null,
   openBox: OpenBox | null,
+  gGTranslateWord: PointedWord | null,
+  lastSelectedWord: PointedWord | null,
   contextMenuWord: PointedWord | null,
   targetLanguage: LanguageKey,
   sourceLanguage: LanguageKey | null,

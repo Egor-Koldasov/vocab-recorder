@@ -1,9 +1,9 @@
 import { ChangeEvent } from "react";
-import browser from 'webextension-polyfill';
 import { getMouseInBoxPos } from "../derivations/getMouseInBoxPos";
 import { getDraggingShift } from "../derivations/useBoxCoords";
 import { Context } from "../types/Store";
 import { WordRecord } from "../../../types/WordRecord";
+import { loadWords, saveWords } from "../../../util/wordsStorage";
 
 export const openBox = ({ get }: Context) => {
   return {
@@ -48,8 +48,7 @@ export const openBox = ({ get }: Context) => {
     save: async () => {
       const { state, mutations } = get();
       if (!state.openBox) return;
-      const storage = await browser.storage.sync.get('words');
-      const words = (storage.words || []) as WordRecord[];
+      const words = await loadWords();
       const currentWord: WordRecord = {
         word: state.openBox.point.word,
         context: state.openBox.context,
@@ -61,7 +60,7 @@ export const openBox = ({ get }: Context) => {
         ],
       };
       const nextWords = [...words, currentWord];
-      await browser.storage.sync.set({ words: nextWords });
+      await saveWords(nextWords);
       mutations.updateByPath('openBox', { translation: '' });
     },
     saveAndClose: async () => {

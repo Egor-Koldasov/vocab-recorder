@@ -1,33 +1,31 @@
-import { useScrollBottom } from "../../hooks/useScrollBottom";
-import { getWindowScroll, useWindowScroll } from "../../hooks/useWindowScroll";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import { boxHeight, boxWidth } from "../../../settings/box";
-import { addCoords } from "../../util/addCoords";
 import { subtractCoords } from "../../util/subtractCoords";
 import { State } from "../types/Store";
 import { useStoreState, useStoreStateSelector } from "../useStore";
+import { Coord } from "../../../types/Coord";
+
+
+const fixedCoordsToBox = (coord: Coord): Coord => coord;
 
 export const useBoxAutoCoords = () => {
-  const scrollBottom = useScrollBottom();
-  const windowScroll = useWindowScroll();
   const windowSize = useWindowSize();
-  const maxX = windowSize.x - boxWidth;
+  const maxCoords = fixedCoordsToBox({
+    x: windowSize.x - boxWidth,
+    y: windowSize.y - boxHeight,
+  });
   const { openBox } = useStoreState();
   if (!openBox) return { x: 0, y: 0 };
-  const centerCoords = addCoords(windowScroll, openBox.point.cursor);
-  const xShifted = centerCoords.x - (boxWidth / 2);
-  return {
-    y: Math.min(scrollBottom - boxHeight, centerCoords.y + 15),
-    x: Math.max(0, Math.min(xShifted, maxX)),
-  };
+  // const centerCoords = fixedCoordsToBox(openBox.point.cursor);
+  // const xShifted = centerCoords.x - (boxWidth / 2);
+  return maxCoords;
 }
 
 export const getDraggingShift = (state: State) => {
-  const windowScroll = getWindowScroll();
   const drag = state.openBox?.drag;
   const cursor = state.cursor;
   if (drag?.active && cursor && drag.mouseInBoxPos) {
-    return subtractCoords(addCoords(windowScroll, cursor), drag.mouseInBoxPos);
+    return subtractCoords(fixedCoordsToBox(cursor), drag.mouseInBoxPos);
   }
   return { x: 0, y: 0 };
 }

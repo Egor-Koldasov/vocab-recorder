@@ -23,7 +23,7 @@ type ContentStyledProps = {
   cursor?: Coord;
 }
 export const ContentStyled = styled.div<ContentStyledProps>`
-  position: absolute;
+  position: fixed;
   background: ${colors.bgMain};
   color: ${colors.textMain};
   z-index: 1201;
@@ -67,7 +67,7 @@ export const OnPageBox = () => {
     if (openBox && !openBox.ref) updateByPath('openBox', { ref: () => ref });
   }, [openBox, ref])
 
-  if (!openBox) return null;
+  if (!openBox?.open) return null;
   return (
     <ContentStyled
       cursor={boxCoords}
@@ -81,45 +81,6 @@ export const OnPageBox = () => {
         />
       </BoxHeader>
       <BoxContent>
-        <BoxContentRow>
-          <QuickLinkList>
-            <a
-              href={`https://translate.google.com/?sl=${sourceLanguage}&tl=${targetLanguage}&text=${openBox.point.word}`}
-              target={
-                window.location.hostname === 'translate.google.com' ?
-                  '_self' :
-                  '_blank'
-              }
-              rel="noreferrer"
-            >
-              GTranslate
-            </a>
-            <a
-              href={`https://${targetLanguage}.glosbe.com/${sourceLanguage}/${targetLanguage}/${openBox.point.word}`}
-              target={
-                window.location.hostname === `${targetLanguage}.glosbe.com` ?
-                  '_self' :
-                  '_blank'
-              }
-              rel="noreferrer"
-            >
-              Glosbe
-            </a>
-            {sourceLanguage && (
-              <a
-                href={`https://context.reverso.net/translation/${languages[sourceLanguage].name.toLocaleLowerCase()}-${languages[targetLanguage].name.toLocaleLowerCase()}/${openBox.point.word}`}
-                target={
-                  window.location.hostname === 'context.reverso.net' ?
-                    '_self' :
-                    '_blank'
-                }
-                rel="noreferrer"
-              >
-                Reverso
-              </a>
-            )}
-          </QuickLinkList>
-        </BoxContentRow>
         <BoxContentRow>
           <TextGroup>
             <Label>Translation</Label>
@@ -142,6 +103,45 @@ export const OnPageBox = () => {
         <Button onClick={save}>Save</Button>
         <Button onClick={saveAndClose}>Save and close</Button>
       </ButtonBar>
+      <BoxContentRow>
+        <QuickLinkList>
+          <a
+            href={`https://translate.google.com/?sl=${sourceLanguage}&tl=${targetLanguage}&text=${openBox.point.word}`}
+            target={
+              window.location.hostname === 'translate.google.com' ?
+                '_self' :
+                '_blank'
+            }
+            rel="noreferrer"
+          >
+            GTranslate
+          </a>
+          <a
+            href={`https://${targetLanguage}.glosbe.com/${sourceLanguage}/${targetLanguage}/${openBox.point.word}`}
+            target={
+              window.location.hostname === `${targetLanguage}.glosbe.com` ?
+                '_self' :
+                '_blank'
+            }
+            rel="noreferrer"
+          >
+            Glosbe
+          </a>
+          {sourceLanguage && (
+            <a
+              href={`https://context.reverso.net/translation/${languages[sourceLanguage].name.toLocaleLowerCase()}-${languages[targetLanguage].name.toLocaleLowerCase()}/${openBox.point.word}`}
+              target={
+                window.location.hostname === 'context.reverso.net' ?
+                  '_self' :
+                  '_blank'
+              }
+              rel="noreferrer"
+            >
+              Reverso
+            </a>
+          )}
+        </QuickLinkList>
+      </BoxContentRow>
     </ContentStyled>
   );
 };

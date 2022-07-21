@@ -16,7 +16,7 @@ export const openBox = ({ get }: Context) => {
       mutations.updateByPath('openBox', { translation: event.currentTarget.value });
     },
     closeBox: () => {
-      get().mutations.update({ openBox: null });
+      get().mutations.updateByPath('openBox', { open: false });
     },
     onDragMouseDown: (event: MouseEvent) => {
       const { state, mutations } = get();
@@ -46,7 +46,7 @@ export const openBox = ({ get }: Context) => {
       mutations.updateByPath('openBox', { point: { word: event.currentTarget.value } });
     },
     save: async () => {
-      const { state } = get();
+      const { state, mutations } = get();
       if (!state.openBox) return;
       const storage = await browser.storage.sync.get('words');
       const words = (storage.words || []) as WordRecord[];
@@ -56,9 +56,13 @@ export const openBox = ({ get }: Context) => {
         translation: state.openBox.translation,
         date_created: Date.now(),
         date_modified: Date.now(),
+        tags: [
+          `lang:${state.sourceLanguage}`,
+        ],
       };
       const nextWords = [...words, currentWord];
       await browser.storage.sync.set({ words: nextWords });
+      mutations.updateByPath('openBox', { translation: '' });
     },
     saveAndClose: async () => {
       const { mutations } = get();

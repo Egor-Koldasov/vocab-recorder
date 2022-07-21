@@ -4,4 +4,5 @@ export type WordRecord = {
   translation: string,
   date_created: number,
   date_modified: number,
+  tags: string[],
 }

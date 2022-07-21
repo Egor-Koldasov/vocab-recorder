@@ -36,6 +36,7 @@
     "partial-deep-keep-union": "file:lib/partial-deep-keep-union",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-select": "^5.4.0",
     "styled-components": "^5.3.5",
     "stylis-important-plugin": "https://github.com/vinzcelavi/stylis-important-plugin",
     "webext-base-css": "^1.4.1",

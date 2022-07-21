@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import { Button } from '../../../components/Button';
-import { useMutations, useStoreStateSelector } from '../../store/useStore';
+import { useMutations } from '../../store/useStore';
 
 export const GTranslateEmbedStyled = styled.div`
   display: flex;
@@ -9,14 +9,11 @@ export const GTranslateEmbedStyled = styled.div`
 `;
 
 export const GTranslateEmbed = () => {
-  const [gGTranslateWord] = useStoreStateSelector((state) => [state.gGTranslateWord]);
-  const { openBox } = useMutations();
+  const { openOnGTranslate } = useMutations();
   return (
     <GTranslateEmbedStyled>
       <Button
-        onClick={() => {
-          if (gGTranslateWord) openBox(gGTranslateWord);
-        }}
+        onClick={openOnGTranslate}
       >
         Add
       </Button>

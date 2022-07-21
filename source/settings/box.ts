@@ -1,6 +1,6 @@
 export const keyTrigger = 'Shift';
-export const boxWidth = 430;
-export const boxHeight = 200;
+export const boxWidth = 450;
+export const boxHeight = 220;
 export const gaps = {
   boxPadding: 8,
   buttonX: 8,

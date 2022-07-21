@@ -5,17 +5,17 @@ import { sendMessage } from "../../util/sendMessage";
 import { keyTrigger } from "../../../settings/box";
 import { mouseMoveToCursor, mouseMoveToSelectedWord } from "../../util/mouseMoveToPoint";
 import { getInitOpenBox } from "../derivations/getInitOpenBox";
-import { Context } from "../types/Store";
+import { Context, LanguageKey } from "../types/Store";
 import { useMutations } from "../useStore";
 import throttle from "lodash/throttle";
 import browser, { Runtime } from 'webextension-polyfill';
 import { isMessageValid } from "../../util/isMessageValid";
 import { createRoot } from "react-dom/client";
 import { GTranslateEmbed } from "../../components/GTranslateEmbed/GTranslateEmbed";
-import { BrowserWithShadowRoot } from '../../../types/BrowserWithShadowRoot';
 import { StyleSheetManager } from 'styled-components';
 import { PointedWord } from '../../../types/PointedWord';
 import { isDeepParentNode } from '../../../util/isDeepParentNode';
+import { getGTranslateShadowRoot } from '../../util/getGTranslateShadowRoot';
 
 
 const gTranslateEmbedId = 'vocab-collector-gtranslate-root';
@@ -66,8 +66,7 @@ export const onPage = ({ get }: Context) => {
     listenToGTranslate: () => {
       const gTranslatePopup = document.querySelector('#gtx-host');
       if (!gTranslatePopup) return;
-      const supportedBrowser = browser as BrowserWithShadowRoot;
-      const gTranslateShadowRoot = supportedBrowser.dom.openOrClosedShadowRoot(gTranslatePopup);
+      const gTranslateShadowRoot = getGTranslateShadowRoot();
       if (!gTranslateShadowRoot || gTranslateShadowRoot.querySelector(`#${gTranslateEmbedId}`)) return;
       const gTranslateEmbedRoot = document.createElement('div');
       const container = (Array.from(gTranslateShadowRoot.childNodes).find(e => e.nodeName === 'DIV')) as Element | undefined;
@@ -90,6 +89,25 @@ export const onPage = ({ get }: Context) => {
       if (!gTranslateBtn || !target || !isDeepParentNode(target, gTranslateBtn)) return;
       const { state, mutations } = get();
       mutations.update({ gGTranslateWord: state.lastSelectedWord });
+    },
+    fillGTranslateWord: () => {
+      const root = getGTranslateShadowRoot();
+      if (!root) return;
+      const { mutations } = get();
+      const langEl = root.querySelector('.gtx-lang-selector') as HTMLSelectElement;
+      const translationEl = root.querySelectorAll('.gtx-body')[1];
+
+      const langCode = langEl.value;
+      const translation = translationEl?.textContent || '';
+      mutations.update({ sourceLanguage: langCode as LanguageKey });
+      mutations.updateByPath('openBox', { translation });
+    },
+    openOnGTranslate: () => {
+      const { state, mutations } = get();
+      if (state.gGTranslateWord) {
+        mutations.openBox(state.gGTranslateWord);
+        mutations.fillGTranslateWord();
+      }
     }
   } as const;
 }

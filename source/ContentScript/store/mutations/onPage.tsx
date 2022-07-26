@@ -9,7 +9,7 @@ import { Context, LanguageKey } from "../types/Store";
 import { useMutations } from "../useStore";
 import throttle from "lodash/throttle";
 import browser, { Runtime } from 'webextension-polyfill';
-import { isMessageValid } from "../../util/isMessageValid";
+import { isNamedMessage } from "../../../util/isMessageValid";
 import { createRoot } from "react-dom/client";
 import { GTranslateEmbed } from "../../components/GTranslateEmbed/GTranslateEmbed";
 import { StyleSheetManager } from 'styled-components';
@@ -60,7 +60,7 @@ export const onPage = ({ get }: Context) => {
     onBgMessage: (message: unknown, sender: Runtime.MessageSender) => {
       const { state, mutations } = get();
       console.log('message', message, sender);
-      if (isMessageValid(message) && message?.name === "context-click" && state.contextMenuWord) {
+      if (isNamedMessage(message) && message?.name === "context-click" && state.contextMenuWord) {
         mutations.openBox(state.contextMenuWord);
       }
     },

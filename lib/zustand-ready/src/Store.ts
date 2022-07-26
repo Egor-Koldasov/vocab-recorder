@@ -1,4 +1,4 @@
-import { PartialDeepKeepNullUnion } from 'partial-deep-keep-union/dist/PartialDeepKeepUnion';
+import { PartialDeepKeepNullUnion } from 'partial-deep-keep-union';
 import { GetState } from 'zustand';
 
 

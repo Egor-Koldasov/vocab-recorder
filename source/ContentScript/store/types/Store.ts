@@ -7,6 +7,7 @@ import { PointedWord } from "../../../types/PointedWord";
 import { getMutations } from "../getMutations";
 import { OpenBox } from "./OpenBox";
 import { languages } from 'countries-list';
+import { WordRecord } from "../../../types/WordRecord";
 
 
 export type LanguageKey = keyof typeof languages;
@@ -20,6 +21,7 @@ export type State = {
   targetLanguage: LanguageKey,
   sourceLanguage: LanguageKey | null,
   iframeSrc: string,
+  savedWords: WordRecord[],
 }
 export type Mutations = ReturnType<typeof getMutations>
 export type Store = {

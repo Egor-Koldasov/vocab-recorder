@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from "styled-components";
 import { Button } from '../../../components/Button';
 import { gaps } from '../../../settings/box';
-import { useMutations } from '../../store/useStore';
+import { isWordDuplicated } from '../../store/derivations/useIsWordDuplicated';
+import { useMutations, useStoreStateSelector } from '../../store/useStore';
 
 export const GTranslateEmbedStyled = styled.div`
   display: flex;
@@ -11,7 +12,15 @@ export const GTranslateEmbedStyled = styled.div`
 `;
 
 export const GTranslateEmbed = () => {
+  const [ gGTranslateWord, savedWords ] = useStoreStateSelector((state) => [
+    state.gGTranslateWord,
+    state.savedWords,
+  ]);
   const { openOnGTranslate, gTransalteQuickAdd } = useMutations();
+  const wordDuplicated = useMemo(() => {
+    if (!gGTranslateWord) return false;
+    return isWordDuplicated(gGTranslateWord.word, savedWords)
+  }, [gGTranslateWord, savedWords]);
   return (
     <GTranslateEmbedStyled>
       <Button
@@ -21,8 +30,10 @@ export const GTranslateEmbed = () => {
       </Button>
       <Button
         onClick={gTransalteQuickAdd}
+        disabled={wordDuplicated}
+        title={wordDuplicated ? 'Word is already saved' : ''}
       >
-        Quick-add
+        Add
       </Button>
     </GTranslateEmbedStyled>
   );

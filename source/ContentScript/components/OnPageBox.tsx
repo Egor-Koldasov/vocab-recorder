@@ -16,16 +16,14 @@ import { Button } from '../../components/Button';
 import { font } from '../../settings/font';
 import { DragButton } from './DragButton';
 import { QuickLinkList } from './QuickLinkList';
-import { Toaster } from 'react-hot-toast';
-import { gaps } from '../../settings/box';
-import { Iframe } from './Iframe';
 import { LinkBtn } from './LinkBtn';
+import { useIsWordDuplicated } from '../store/derivations/useIsWordDuplicated';
 
 
-type ContentStyledProps = {
-  cursor?: Coord;
+type OnPageBoxStyledProps = {
+  pos?: Coord;
 }
-export const ContentStyled = styled.div<ContentStyledProps>`
+export const OnPageBoxStyled = styled.div<OnPageBoxStyledProps>`
   position: fixed;
   background: ${colors.bgMain};
   color: ${colors.textMain};
@@ -39,24 +37,16 @@ export const ContentStyled = styled.div<ContentStyledProps>`
   border: 3px solid ${colors.border};
   border-radius: 5px;
   box-shadow: 2px 2px 6px 1px ${colors.shadow};
-  ${({ cursor }) => cursor && css`
+  ${({ pos: cursor }) => cursor && css`
     top: ${cursor.y}px;
     left: ${cursor.x}px;
   `}
-`;
-export const Root = styled.div`
-  .toast-container {
-    background: ${colors.primary};
-    padding: ${gaps.buttonX}px;
-    border-radius: 5px;
-  }
 `;
 
 export const OnPageBox = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [
     openBox,
-    iframeSrc,
   ] = useStoreStateSelector((state) => [
     state.openBox,
     state.iframeSrc,
@@ -74,6 +64,7 @@ export const OnPageBox = () => {
     setReversoIframe,
   } = useMutations();
   const boxCoords = useBoxCoords();
+  const wordDuplicated = useIsWordDuplicated();
   useOnPageEffects();
   useEffect(() => {
     if (openBox && !openBox.ref) updateByPath('openBox', { ref: () => ref });
@@ -81,72 +72,63 @@ export const OnPageBox = () => {
 
   if (!openBox?.open) return null;
   return (
-    <Root>
-      <Toaster
-        toastOptions={{
-          className: 'toast-container',
-        }}
-        // containerStyle={{
-        //   left: 'auto',
-        //   right: 1,
-        // }}
-      />
-      <ContentStyled
-        cursor={boxCoords}
-        ref={ref}
-      >
-        <BoxHeader>
-          <DragButton />
-          <SelectedWord
-            value={openBox.point.word}
-            onChange={onSelectedWordChange}
-          />
-        </BoxHeader>
-        <BoxContent>
-          <BoxContentRow>
-            <TextGroup>
-              <Label>Translation</Label>
-              <ContextShown
-                value={openBox.translation}
-                onChange={onTranslationChange}
-              />
-            </TextGroup>
-            <TextGroup>
-              <Label>Context</Label>
-              <ContextShown
-                value={openBox.context}
-                onChange={onContextChange}
-              />
-            </TextGroup>
-          </BoxContentRow>
-        </BoxContent>
-        <ButtonBar>
-          <Button onClick={closeBox}>Close</Button>
-          <Button onClick={save}>Save</Button>
-          <Button onClick={saveAndClose}>Save and close</Button>
-        </ButtonBar>
-        <BoxContentRow>
-          <QuickLinkList>
-            <LinkBtn onClick={setGTranslateIframe}>
-              GTranslate
-            </LinkBtn>
-            <LinkBtn onClick={setGlosbeIframe}>
-              Glosbe
-            </LinkBtn>
-            <LinkBtn onClick={setReversoIframe}>
-              Reverso
-            </LinkBtn>
-          </QuickLinkList>
-        </BoxContentRow>
-        <Iframe
-          src={iframeSrc}
-          onLoad={(event) => {
-            console.log('iframe loaded', event);
-          }}
-          width={500}
-          height={300}
+    <OnPageBoxStyled
+      pos={boxCoords}
+      ref={ref}
+    >
+      <BoxHeader>
+        <DragButton />
+        <SelectedWord
+          value={openBox.point.word}
+          onChange={onSelectedWordChange}
+          wordDuplicated={wordDuplicated}
+          title={wordDuplicated ? 'Already exists' : ''}
         />
-      </ContentStyled>
-    </Root>
+      </BoxHeader>
+      <BoxContent>
+        <BoxContentRow>
+          <TextGroup>
+            <Label>Translation</Label>
+            <ContextShown
+              value={openBox.translation}
+              onChange={onTranslationChange}
+            />
+          </TextGroup>
+          <TextGroup>
+            <Label>Context</Label>
+            <ContextShown
+              value={openBox.context}
+              onChange={onContextChange}
+            />
+          </TextGroup>
+        </BoxContentRow>
+      </BoxContent>
+      <ButtonBar>
+        <Button onClick={closeBox}>Close</Button>
+        <Button
+          onClick={save}
+          disabled={wordDuplicated}
+          title={wordDuplicated ? 'Word is already saved' : ''}
+        >Save</Button>
+        <Button
+          onClick={saveAndClose}
+          disabled={wordDuplicated}
+          title={wordDuplicated ? 'Word is already saved' : ''}
+        >Save and close</Button>
+      </ButtonBar>
+      <BoxContentRow>
+        <QuickLinkList>
+          <LinkBtn onClick={setGTranslateIframe}>
+            GTranslate
+          </LinkBtn>
+          <LinkBtn onClick={setGlosbeIframe}>
+            Glosbe
+          </LinkBtn>
+          <LinkBtn onClick={setReversoIframe}>
+            Reverso
+          </LinkBtn>
+        </QuickLinkList>
+      </BoxContentRow>
+    </OnPageBoxStyled>
   );
 };

@@ -10,4 +10,5 @@ export const initialState: State = {
   gGTranslateWord: null,
   lastSelectedWord: null,
   iframeSrc: '',
+  savedWords: [],
 };

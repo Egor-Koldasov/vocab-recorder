@@ -1,6 +1,6 @@
 import { get } from 'dot-get-ts';
 import { set } from 'lodash';
-import { PartialDeepKeepNullUnion } from 'partial-deep-keep-union/dist/PartialDeepKeepUnion';
+import { PartialDeepKeepNullUnion } from 'partial-deep-keep-union';
 import { Get } from 'type-fest';
 import { Context, State, StatePath, StateUpdate } from '../types/Store';
 

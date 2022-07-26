@@ -3,7 +3,6 @@ import { getMouseInBoxPos } from "../derivations/getMouseInBoxPos";
 import { getDraggingShift } from "../derivations/useBoxCoords";
 import { Context } from "../types/Store";
 import { WordRecord } from "../../../types/WordRecord";
-import { loadWords, saveWords } from "../../../util/wordsStorage";
 import toast from "react-hot-toast";
 import { getGlosbeUrl, getGTransalteUrl, getReversoUrl, IframeProps, stateToIframeProps } from "../derivations/iframeUrls";
 
@@ -50,7 +49,6 @@ export const openBox = ({ get }: Context) => {
     save: async () => {
       const { state, mutations } = get();
       if (!state.openBox) return;
-      const words = await loadWords();
       const currentWord: WordRecord = {
         word: state.openBox.point.word,
         context: state.openBox.context,
@@ -61,8 +59,7 @@ export const openBox = ({ get }: Context) => {
           `lang:${state.sourceLanguage}`,
         ],
       };
-      const nextWords = [...words, currentWord];
-      await saveWords(nextWords);
+      mutations.addWord(currentWord);
       toast.success(`Added "${currentWord.word}"`);
       mutations.updateByPath('openBox', { translation: '' });
     },

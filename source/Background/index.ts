@@ -1,6 +1,7 @@
 import 'emoji-log';
 import browser from 'webextension-polyfill';
 import { Message } from '../types/Message';
+import { initSavedWordsSync } from './savedWordsSync';
 
 browser.runtime.onInstalled.addListener((): void => {
   console.emoji('🦄', 'extension installed');
@@ -87,3 +88,4 @@ browser.webRequest.onBeforeSendHeaders.addListener(
     (browser.webRequest as any).OnHeadersReceivedOptions.EXTRA_HEADERS,
   ].filter(Boolean)
 )
+initSavedWordsSync();

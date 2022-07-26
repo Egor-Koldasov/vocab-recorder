@@ -1,8 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { colors } from '../../settings/colors';
 import { font } from '../../settings/font';
 
-export const SelectedWord = styled.input`
+export const SelectedWord = styled.input<{ wordDuplicated?: boolean }>`
   font-weight: bold;
   font-size: ${font.lg1}px;
   background-color: transparent;
@@ -14,4 +14,7 @@ export const SelectedWord = styled.input`
     outline: none;
     border: 1px solid ${colors.textHeader};
   }
+  ${({ wordDuplicated }) => wordDuplicated && css`
+    color: ${colors.textError};
+  `}
 `;

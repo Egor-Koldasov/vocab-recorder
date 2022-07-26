@@ -1,1 +1,1 @@
-export { PartialDeepKeepUnion } from './PartialDeepKeepUnion';
+export { PartialDeepKeepUnion, PartialDeepKeepNullUnion } from './PartialDeepKeepUnion';

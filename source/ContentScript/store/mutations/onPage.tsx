@@ -27,6 +27,7 @@ export const onPage = ({ get }: Context) => {
       if (!wordUsed) return;
       sendMessage({ name: 'pointed-word', state });
       mutations.update({ openBox: getInitOpenBox(state, wordUsed) });
+      mutations.setGTranslateIframe();
     },
     onPageMouseMove: throttle((event: MouseEvent) => {
       const { mutations } = get();
@@ -108,6 +109,11 @@ export const onPage = ({ get }: Context) => {
         mutations.openBox(state.gGTranslateWord);
         mutations.fillGTranslateWord();
       }
+    },
+    gTransalteQuickAdd: () => {
+      const { mutations } = get();
+      mutations.openOnGTranslate();
+      mutations.saveAndClose();
     }
   } as const;
 }

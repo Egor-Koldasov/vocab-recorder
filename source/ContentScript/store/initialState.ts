@@ -9,4 +9,5 @@ export const initialState: State = {
   targetLanguage: 'en',
   gGTranslateWord: null,
   lastSelectedWord: null,
+  iframeSrc: '',
 };

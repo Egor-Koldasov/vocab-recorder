@@ -30,7 +30,7 @@ export const getDraggingShift = (state: State) => {
   return { x: 0, y: 0 };
 }
 
-export const useBoxCoords = () => {
+export const useBoxCoords = (): Coord => {
   const autoCoords = useBoxAutoCoords();
   const draggingShift = useStoreStateSelector(getDraggingShift);
   const drag = useStoreStateSelector((state) => state.openBox?.drag);

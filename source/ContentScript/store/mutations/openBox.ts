@@ -4,6 +4,8 @@ import { getDraggingShift } from "../derivations/useBoxCoords";
 import { Context } from "../types/Store";
 import { WordRecord } from "../../../types/WordRecord";
 import { loadWords, saveWords } from "../../../util/wordsStorage";
+import toast from "react-hot-toast";
+import { getGlosbeUrl, getGTransalteUrl, getReversoUrl, IframeProps, stateToIframeProps } from "../derivations/iframeUrls";
 
 export const openBox = ({ get }: Context) => {
   return {
@@ -61,12 +63,20 @@ export const openBox = ({ get }: Context) => {
       };
       const nextWords = [...words, currentWord];
       await saveWords(nextWords);
+      toast.success(`Added "${currentWord.word}"`);
       mutations.updateByPath('openBox', { translation: '' });
     },
     saveAndClose: async () => {
       const { mutations } = get();
       mutations.save();
       mutations.closeBox();
-    }
+    },
+    setIframe: (getIframeUrl: ((p: IframeProps) => string)) => {
+      const { state, mutations } = get();
+      mutations.update({ iframeSrc: getIframeUrl(stateToIframeProps(state)) });
+    },
+    setGTranslateIframe: () => get().mutations.setIframe(getGTransalteUrl),
+    setGlosbeIframe: () => get().mutations.setIframe(getGlosbeUrl),
+    setReversoIframe: () => get().mutations.setIframe(getReversoUrl),
   } as const;
 };

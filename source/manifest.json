@@ -18,6 +18,8 @@
     "storage",
     "unlimitedStorage",
     "contextMenus",
+    "webRequest",
+    "webRequestBlocking",
     "http://*/*",
     "https://*/*"
   ],
@@ -62,7 +64,8 @@
     "scripts": [
       "js/background.bundle.js"
     ],
-    "__chrome|opera__persistent": false
+    "persistent": true,
+    "__chrome|opera__persistent": true
   },
 
   "content_scripts": [{

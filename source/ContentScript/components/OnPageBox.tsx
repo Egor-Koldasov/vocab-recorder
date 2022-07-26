@@ -16,7 +16,10 @@ import { Button } from '../../components/Button';
 import { font } from '../../settings/font';
 import { DragButton } from './DragButton';
 import { QuickLinkList } from './QuickLinkList';
-import { languages } from 'countries-list';
+import { Toaster } from 'react-hot-toast';
+import { gaps } from '../../settings/box';
+import { Iframe } from './Iframe';
+import { LinkBtn } from './LinkBtn';
 
 
 type ContentStyledProps = {
@@ -41,16 +44,22 @@ export const ContentStyled = styled.div<ContentStyledProps>`
     left: ${cursor.x}px;
   `}
 `;
+export const Root = styled.div`
+  .toast-container {
+    background: ${colors.primary};
+    padding: ${gaps.buttonX}px;
+    border-radius: 5px;
+  }
+`;
+
 export const OnPageBox = () => {
   const ref = useRef<HTMLDivElement>(null);
   const [
     openBox,
-    sourceLanguage,
-    targetLanguage,
+    iframeSrc,
   ] = useStoreStateSelector((state) => [
     state.openBox,
-    state.sourceLanguage,
-    state.targetLanguage,
+    state.iframeSrc,
   ]);
   const {
     onContextChange,
@@ -60,6 +69,9 @@ export const OnPageBox = () => {
     onSelectedWordChange,
     save,
     saveAndClose,
+    setGTranslateIframe,
+    setGlosbeIframe,
+    setReversoIframe,
   } = useMutations();
   const boxCoords = useBoxCoords();
   useOnPageEffects();
@@ -69,79 +81,72 @@ export const OnPageBox = () => {
 
   if (!openBox?.open) return null;
   return (
-    <ContentStyled
-      cursor={boxCoords}
-      ref={ref}
-    >
-      <BoxHeader>
-        <DragButton />
-        <SelectedWord
-          value={openBox.point.word}
-          onChange={onSelectedWordChange}
-        />
-      </BoxHeader>
-      <BoxContent>
+    <Root>
+      <Toaster
+        toastOptions={{
+          className: 'toast-container',
+        }}
+        // containerStyle={{
+        //   left: 'auto',
+        //   right: 1,
+        // }}
+      />
+      <ContentStyled
+        cursor={boxCoords}
+        ref={ref}
+      >
+        <BoxHeader>
+          <DragButton />
+          <SelectedWord
+            value={openBox.point.word}
+            onChange={onSelectedWordChange}
+          />
+        </BoxHeader>
+        <BoxContent>
+          <BoxContentRow>
+            <TextGroup>
+              <Label>Translation</Label>
+              <ContextShown
+                value={openBox.translation}
+                onChange={onTranslationChange}
+              />
+            </TextGroup>
+            <TextGroup>
+              <Label>Context</Label>
+              <ContextShown
+                value={openBox.context}
+                onChange={onContextChange}
+              />
+            </TextGroup>
+          </BoxContentRow>
+        </BoxContent>
+        <ButtonBar>
+          <Button onClick={closeBox}>Close</Button>
+          <Button onClick={save}>Save</Button>
+          <Button onClick={saveAndClose}>Save and close</Button>
+        </ButtonBar>
         <BoxContentRow>
-          <TextGroup>
-            <Label>Translation</Label>
-            <ContextShown
-              value={openBox.translation}
-              onChange={onTranslationChange}
-            />
-          </TextGroup>
-          <TextGroup>
-            <Label>Context</Label>
-            <ContextShown
-              value={openBox.context}
-              onChange={onContextChange}
-            />
-          </TextGroup>
-        </BoxContentRow>
-      </BoxContent>
-      <ButtonBar>
-        <Button onClick={closeBox}>Close</Button>
-        <Button onClick={save}>Save</Button>
-        <Button onClick={saveAndClose}>Save and close</Button>
-      </ButtonBar>
-      <BoxContentRow>
-        <QuickLinkList>
-          <a
-            href={`https://translate.google.com/?sl=${sourceLanguage}&tl=${targetLanguage}&text=${openBox.point.word}`}
-            target={
-              window.location.hostname === 'translate.google.com' ?
-                '_self' :
-                '_blank'
-            }
-            rel="noreferrer"
-          >
-            GTranslate
-          </a>
-          <a
-            href={`https://${targetLanguage}.glosbe.com/${sourceLanguage}/${targetLanguage}/${openBox.point.word}`}
-            target={
-              window.location.hostname === `${targetLanguage}.glosbe.com` ?
-                '_self' :
-                '_blank'
-            }
-            rel="noreferrer"
-          >
-            Glosbe
-          </a>
-          {sourceLanguage && (
-            <a
-              href={`https://context.reverso.net/translation/${languages[sourceLanguage].name.toLocaleLowerCase()}-${languages[targetLanguage].name.toLocaleLowerCase()}/${openBox.point.word}`}
-              target={
-                window.location.hostname === 'context.reverso.net' ?
-                  '_self' :
-                  '_blank'
-              }
-              rel="noreferrer"
-            >
+          <QuickLinkList>
+            <LinkBtn onClick={setGTranslateIframe}>
+              GTranslate
+            </LinkBtn>
+            <LinkBtn onClick={setGlosbeIframe}>
+              Glosbe
+            </LinkBtn>
+            <LinkBtn onClick={setReversoIframe}>
               Reverso
-            </a>
-          )}
-        </QuickLinkList>
-      </BoxContentRow>
-    </ContentStyled>
+            </LinkBtn>
+          </QuickLinkList>
+        </BoxContentRow>
+        <Iframe
+          src={iframeSrc}
+          onLoad={(event) => {
+            console.log('iframe loaded', event);
+          }}
+          width={500}
+          height={300}
+        />
+      </ContentStyled>
+    </Root>
   );
 };

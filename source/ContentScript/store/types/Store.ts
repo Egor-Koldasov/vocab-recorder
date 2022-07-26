@@ -19,6 +19,7 @@ export type State = {
   contextMenuWord: PointedWord | null,
   targetLanguage: LanguageKey,
   sourceLanguage: LanguageKey | null,
+  iframeSrc: string,
 }
 export type Mutations = ReturnType<typeof getMutations>
 export type Store = {
